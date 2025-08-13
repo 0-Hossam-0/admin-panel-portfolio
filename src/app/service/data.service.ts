@@ -121,7 +121,11 @@ export class DataService {
     formData.append('title', project.title || '');
     formData.append('description', project.description || '');
     formData.append('githubLink', project.githubLink || '');
-    formData.append('technologies', JSON.stringify(project.technologies || []));
+    if (project.technologies) {
+      project.technologies.forEach((tech) => {
+        formData.append('technologies', tech);
+      });
+    }
 
     const existingImageUrls: string[] = [];
     selectedImages.forEach((img) => {
@@ -151,7 +155,11 @@ export class DataService {
     formData.append('title', project.title || '');
     formData.append('description', project.description || '');
     formData.append('githubLink', project.githubLink || '');
-    formData.append('technologies', JSON.stringify(project.technologies ?? []));
+    if (project.technologies) {
+      project.technologies.forEach((tech) => {
+        formData.append('technologies', tech);
+      });
+    }
 
     selectedImages.forEach((img) => {
       if (img.file) {
