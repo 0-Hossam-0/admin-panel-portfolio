@@ -1,0 +1,126 @@
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 py-8">
+  <div class="space-y-8">
+    <div class="text-center">
+      <div
+        class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-2xl shadow-lg mb-4"
+      >
+        <lucide-icon [img]="messageCircleIcon" class="h-6 w-6"></lucide-icon>
+        <h2 class="text-2xl font-bold">Contact Information</h2>
+      </div>
+      <p class="text-gray-600 text-lg">
+        Keep your contact details and social media links up to date
+      </p>
+    </div>
+
+    <div
+      class="bg-white/60 backdrop-blur-sm rounded-2xl border border-white/20 shadow-xl p-8"
+    >
+      <form [formGroup]="contactForm" (ngSubmit)="onSave()" class="space-y-8">
+        <div class="space-y-6">
+          <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <div
+              class="w-1 h-6 bg-gradient-to-b from-orange-500 to-red-600 rounded-full"
+            ></div>
+            Basic Information
+          </h3>
+          <div class="grid gap-6 md:grid-cols-2">
+            <div class="space-y-3">
+              <label
+                for="email"
+                class="text-sm font-semibold text-gray-700 flex items-center gap-2"
+              >
+                <lucide-icon
+                  [img]="mailIcon"
+                  class="h-4 w-4 text-orange-500"
+                ></lucide-icon>
+                Email Address
+              </label>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                class="input-focus w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-orange-500 focus:outline-none font-medium"
+              />
+            </div>
+            <div class="space-y-3">
+              <label
+                for="phone"
+                class="text-sm font-semibold text-gray-700 flex items-center gap-2"
+              >
+                <lucide-icon
+                  [img]="phoneIcon"
+                  class="h-4 w-4 text-orange-500"
+                ></lucide-icon>
+                Phone Number
+              </label>
+              <input
+                id="phone"
+                formControlName="phone"
+                class="input-focus w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-orange-500 focus:outline-none font-medium"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6 ">
+          <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <div
+              class="w-1 h-6 bg-gradient-to-b from-orange-500 to-red-600 rounded-full"
+            ></div>
+            Social Media Links
+          </h3>
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+            <div class="space-y-3">
+              <label
+                for="linkedin"
+                class="text-sm font-semibold text-gray-700 flex items-center gap-2"
+              >
+                <div class="p-1 bg-blue-100 rounded">
+                  <lucide-icon
+                    [img]="linkedinIcon"
+                    class="h-4 w-4 text-blue-600"
+                  ></lucide-icon>
+                </div>
+                LinkedIn
+              </label>
+              <input
+                id="linkedin"
+                formControlName="linkedin"
+                class="input-focus w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-blue-500 focus:outline-none font-medium"
+              />
+            </div>
+            <div class="space-y-3">
+              <label
+                for="github"
+                class="text-sm font-semibold text-gray-700 flex items-center gap-2"
+              >
+                <div class="p-1 bg-gray-100 rounded">
+                  <lucide-icon
+                    [img]="githubIcon"
+                    class="h-4 w-4 text-gray-800"
+                  ></lucide-icon>
+                </div>
+                GitHub
+              </label>
+              <input
+                id="github"
+                formControlName="github"
+                class="input-focus w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-gray-500 focus:outline-none font-medium"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center pt-4">
+          <button
+            type="submit"
+            class="btn-gradient flex items-center gap-3 px-8 py-4 rounded-xl text-white font-semibold text-lg shadow-lg"
+          >
+            <lucide-icon [img]="saveIcon" class="h-5 w-5"></lucide-icon>
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>

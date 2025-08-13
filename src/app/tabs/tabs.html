@@ -1,0 +1,16 @@
+<main class="mx-auto px-4 sm:px-6 lg:px-8 py-8 flex justify-center">
+  <div class="space-y-8">
+    <div
+      class="flex flex-wrap gap-2 p-2 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 shadow-sm"
+    >
+      <button
+        *ngFor="let tab of tabs"
+        (click)="onTab(tab.id)"
+        [class]="getTabClass(tab.id)"
+      >
+        <lucide-icon [img]="tab.icon" class="h-4 w-4"></lucide-icon>
+        {{ tab.label }}
+      </button>
+    </div>
+  </div>
+</main>

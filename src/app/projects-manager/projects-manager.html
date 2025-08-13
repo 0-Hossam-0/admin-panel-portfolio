@@ -1,0 +1,389 @@
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 py-8">
+  <div class="space-y-8">
+    <div
+      class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+    >
+      <div class="text-center md:text-left">
+        <div
+          class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-2xl shadow-lg mb-4"
+        >
+          <lucide-icon [img]="folderOpenIcon" class="h-6 w-6"></lucide-icon>
+          <h2 class="text-2xl font-bold">Projects</h2>
+        </div>
+      </div>
+      <button
+        (click)="addProject()"
+        class="btn-gradient flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+      >
+        <lucide-icon [img]="plusIcon" class="h-5 w-5"></lucide-icon>
+        Add New Project
+      </button>
+    </div>
+
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div
+        *ngFor="let project of projects"
+        class="card-hover group bg-white/60 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg overflow-hidden"
+      >
+        <div
+          class="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden"
+        >
+          <div class="relative w-full h-full">
+            <img
+              [alt]="project.title"
+              [src]="getCurrentImage(project)"
+              class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+            />
+
+            <!-- Image Navigation Overlay -->
+            <div
+              *ngIf="project.images.length > 1"
+              class="absolute inset-0 flex items-center justify-between p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              <button
+                (click)="previousImage(project.id)"
+                class="p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors backdrop-blur-sm"
+              >
+                <lucide-icon
+                  [img]="chevronLeftIcon"
+                  class="h-4 w-4"
+                ></lucide-icon>
+              </button>
+              <button
+                (click)="nextImage(project.id)"
+                class="p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors backdrop-blur-sm"
+              >
+                <lucide-icon
+                  [img]="chevronRightIcon"
+                  class="h-4 w-4"
+                ></lucide-icon>
+              </button>
+            </div>
+
+            <div
+              *ngIf="project.images.length > 1"
+              class="absolute bottom-4 left-4 px-3 py-1 bg-black/50 text-white rounded-full text-xs font-medium backdrop-blur-sm"
+            >
+              {{ (currentImageIndex[project.id] || 0) + 1 }} /
+              {{ project.images.length }}
+            </div>
+
+            <div
+              class="absolute top-4 left-4 flex items-center gap-1 px-3 py-1 bg-black/50 text-white rounded-full text-xs font-medium backdrop-blur-sm"
+            >
+              <lucide-icon [img]="imageIcon" class="h-3 w-3"></lucide-icon>
+              {{ project.images.length }}
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <h3
+            class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors"
+          >
+            {{ project.title }}
+          </h3>
+          <p class="text-gray-600 mb-4 line-clamp-2">
+            {{ project.description }}
+          </p>
+
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span
+              *ngFor="let technology of project.technologies"
+              class="px-3 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-full text-xs font-medium border border-blue-200"
+            >
+              {{ technology }}
+            </span>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <div class="flex space-x-2">
+              <a
+                [href]="project.githubLink"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-2 bg-gradient-to-r from-gray-700 to-gray-800 text-white rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-110"
+                title="View Code"
+              >
+                <lucide-icon [img]="githubIcon" class="h-4 w-4"></lucide-icon>
+              </a>
+            </div>
+            <div class="flex space-x-2">
+              <button
+                (click)="editProject(project)"
+                class="p-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-110"
+                title="Edit Project"
+              >
+                <lucide-icon [img]="editIcon" class="h-4 w-4"></lucide-icon>
+              </button>
+              <button
+                (click)="
+                  deleteProject({ title: project.title, id: project.id })
+                "
+                class="p-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-110"
+                title="Delete Project"
+              >
+                <lucide-icon [img]="trashIcon" class="h-4 w-4"></lucide-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      *ngIf="showModal"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        (click)="closeModal()"
+      ></div>
+      <div
+        class="relative bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-white/20"
+      >
+        <div class="p-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">
+            {{ editingProject?.id ? "Edit Project" : "Add New Project" }}
+          </h2>
+
+          <!-- General Error Message -->
+          <div
+            *ngIf="hasFieldError('general')"
+            class="mb-6 p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl"
+          >
+            <p class="text-sm text-red-700 font-medium">
+              {{ getFieldError("general") }}
+            </p>
+          </div>
+
+          <form
+            [formGroup]="projectForm"
+            (ngSubmit)="saveProject()"
+            class="space-y-6"
+          >
+            <!-- Basic Info -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-3">
+                <label for="title" class="text-sm font-semibold text-gray-700"
+                  >Project Title</label
+                >
+                <input
+                  id="title"
+                  formControlName="title"
+                  [class]="
+                    hasFieldError('title')
+                      ? 'input-focus w-full h-12 px-4 rounded-xl border-2 border-red-300 bg-white/50 backdrop-blur-sm focus:border-red-500 focus:outline-none font-medium'
+                      : 'input-focus w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-blue-500 focus:outline-none font-medium'
+                  "
+                />
+                <div
+                  *ngIf="hasFieldError('title')"
+                  class="text-sm text-red-600 font-medium"
+                >
+                  {{ getFieldError("title") }}
+                </div>
+              </div>
+              <div class="space-y-3">
+                <label
+                  for="technologies"
+                  class="text-sm font-semibold text-gray-700"
+                  >Technologies (comma-separated)</label
+                >
+                <input
+                  id="technologies"
+                  formControlName="technologies"
+                  [class]="
+                    hasFieldError('technologies')
+                      ? 'input-focus w-full h-12 px-4 rounded-xl border-2 border-red-300 bg-white/50 backdrop-blur-sm focus:border-red-500 focus:outline-none font-medium'
+                      : 'input-focus w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-blue-500 focus:outline-none font-medium'
+                  "
+                />
+                <div
+                  *ngIf="hasFieldError('technologies')"
+                  class="text-sm text-red-600 font-medium"
+                >
+                  {{ getFieldError("technologies") }}
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <label
+                for="description"
+                class="text-sm font-semibold text-gray-700"
+                >Description</label
+              >
+              <textarea
+                id="description"
+                formControlName="description"
+                rows="4"
+                [class]="
+                  hasFieldError('description')
+                    ? 'input-focus w-full px-4 py-3 rounded-xl border-2 border-red-300 bg-white/50 backdrop-blur-sm focus:border-red-500 focus:outline-none font-medium resize-none'
+                    : 'input-focus w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-blue-500 focus:outline-none font-medium resize-none'
+                "
+              ></textarea>
+              <div
+                *ngIf="hasFieldError('description')"
+                class="text-sm text-red-600 font-medium"
+              >
+                {{ getFieldError("description") }}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-3">
+                <label
+                  for="githubUrl"
+                  class="text-sm font-semibold text-gray-700"
+                  >GitHub URL</label
+                >
+                <input
+                  id="githubUrl"
+                  formControlName="githubLink"
+                  [class]="
+                    hasFieldError('githubLink')
+                      ? 'input-focus w-full h-12 px-4 rounded-xl border-2 border-red-300 bg-white/50 backdrop-blur-sm focus:border-red-500 focus:outline-none font-medium'
+                      : 'input-focus w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-blue-500 focus:outline-none font-medium'
+                  "
+                />
+                <div
+                  *ngIf="hasFieldError('githubLink')"
+                  class="text-sm text-red-600 font-medium"
+                >
+                  {{ getFieldError("githubLink") }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Images Section -->
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-semibold text-gray-700"
+                  >Project Images</label
+                >
+                <div class="flex gap-2">
+                  <input
+                    type="file"
+                    #fileInput
+                    multiple
+                    (change)="onFileSelected($event)"
+                    class="hidden"
+                  />
+                  <button
+                    type="button"
+                    (click)="fileInput.click()"
+                    class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 text-sm font-medium"
+                  >
+                    <lucide-icon
+                      [img]="cameraIcon"
+                      class="h-4 w-4"
+                    ></lucide-icon>
+                    Upload Images
+                  </button>
+                </div>
+              </div>
+
+              <!-- Drag and Drop Area -->
+              <div
+                class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors"
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)"
+                (drop)="onDrop($event)"
+                [class.border-blue-400]="isDragOver"
+                [class.bg-blue-50]="isDragOver"
+              >
+                <lucide-icon
+                  [img]="uploadIcon"
+                  class="h-12 w-12 text-gray-400 mx-auto mb-4"
+                ></lucide-icon>
+                <p class="text-gray-600 mb-2">
+                  Drag and drop images here, or click to select
+                </p>
+                <p class="text-sm text-gray-400">
+                  Supports: JPG, PNG, GIF, WebP
+                </p>
+              </div>
+
+              <!-- Images Error -->
+              <div
+                *ngIf="hasFieldError('images')"
+                class="text-sm text-red-600 font-medium"
+              >
+                {{ getFieldError("images") }}
+              </div>
+
+              <!-- Image Preview Grid -->
+              <div *ngIf="selectedImages.length > 0" class="mt-6">
+                <h4 class="text-sm font-semibold text-gray-700 mb-3">
+                  Selected Images ({{ selectedImages.length }})
+                </h4>
+                <div
+                  class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                >
+                  <div
+                    *ngFor="let image of selectedImages; let i = index"
+                    class="relative group"
+                  >
+                    <div
+                      class="aspect-video bg-gray-100 rounded-lg overflow-hidden"
+                    >
+                      <img
+                        [src]="image.url"
+                        [alt]="image.name"
+                        class="w-full h-full object-cover"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      (click)="removeImage(i)"
+                      class="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                    >
+                      <lucide-icon [img]="xIcon" class="h-3 w-3"></lucide-icon>
+                    </button>
+                    <div class="absolute bottom-2 left-2 right-2">
+                      <div
+                        class="bg-black/50 text-white text-xs px-2 py-1 rounded truncate"
+                      >
+                        {{ image.name }}
+                      </div>
+                    </div>
+                    <div
+                      class="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded"
+                    >
+                      {{ i + 1 }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end space-x-4 pt-6">
+              <button
+                type="button"
+                (click)="closeModal()"
+                [disabled]="isSubmitting"
+                class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                [disabled]="isSubmitting"
+                class="btn-gradient px-6 py-3 rounded-xl text-white font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <div
+                  *ngIf="isSubmitting"
+                  class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"
+                ></div>
+                {{ isSubmitting ? "Saving..." : "Save Project" }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

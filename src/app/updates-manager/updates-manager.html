@@ -1,0 +1,415 @@
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 py-8">
+  <div class="space-y-8">
+    <div
+      class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+    >
+      <div class="text-center md:text-left">
+        <div
+          class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl shadow-lg mb-4"
+        >
+          <lucide-icon [img]="bellIcon" class="h-6 w-6"></lucide-icon>
+          <h2 class="text-2xl font-bold">Updates</h2>
+        </div>
+      </div>
+      <button
+        (click)="addUpdate()"
+        class="btn-gradient flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold shadow-lg"
+      >
+        <lucide-icon [img]="plusIcon" class="h-5 w-5"></lucide-icon>
+        Create Update
+      </button>
+    </div>
+
+    <div *ngIf="updates && updates.length === 0" class="text-center py-12">
+      <div
+        class="bg-white/60 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg p-8"
+      >
+        <lucide-icon
+          [img]="bellIcon"
+          class="h-16 w-16 text-gray-400 mx-auto mb-4"
+        ></lucide-icon>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">No Updates Yet</h3>
+        <p class="text-gray-500 mb-6">
+          Start by creating your first update to share news and announcements.
+        </p>
+        <button
+          (click)="addUpdate()"
+          class="btn-gradient flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold shadow-lg mx-auto"
+        >
+          <lucide-icon [img]="plusIcon" class="h-5 w-5"></lucide-icon>
+          Create Your First Update
+        </button>
+      </div>
+    </div>
+
+    <div
+      *ngIf="updates && updates.length > 0"
+      class="grid grid-cols-1 lg:grid-cols-2 gap-6"
+    >
+      <div
+        *ngFor="let update of updates; let i = index"
+        class="card-hover bg-white/60 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg overflow-hidden"
+      >
+        <div class="p-8">
+          <div
+            class="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-6"
+          >
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-3 mb-3">
+                <span
+                  class="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-purple-400 to-purple-600 text-white rounded-full text-xs font-semibold shadow-sm"
+                >
+                  <lucide-icon [img]="tagIcon" class="h-3 w-3"></lucide-icon>
+                  News
+                </span>
+                <div class="flex items-center gap-2">
+                  <div
+                    *ngIf="update.images && update.images.length > 0"
+                    class="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-full text-xs font-semibold shadow-sm"
+                  >
+                    <lucide-icon
+                      [img]="imageIcon"
+                      class="h-3 w-3"
+                    ></lucide-icon>
+                    {{ update.images.length }}
+                  </div>
+                </div>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900 mb-2">
+                {{ update.title }}
+              </h3>
+              <div class="flex items-center gap-2 text-gray-600 mb-4">
+                <lucide-icon
+                  [img]="calendarIcon"
+                  class="h-4 w-4 text-indigo-500"
+                ></lucide-icon>
+                <span class="font-medium">{{
+                  formatDate(update.postDate)
+                }}</span>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button
+                (click)="editUpdate(update)"
+                class="p-2 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-110"
+                title="Edit Update"
+              >
+                <lucide-icon [img]="editIcon" class="h-4 w-4"></lucide-icon>
+              </button>
+              <button
+                (click)="deleteUpdate(update)"
+                class="p-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 hover:scale-110"
+                title="Delete Update"
+              >
+                <lucide-icon [img]="trashIcon" class="h-4 w-4"></lucide-icon>
+              </button>
+            </div>
+          </div>
+
+          <p class="text-gray-700 leading-relaxed mb-6">
+            {{ update.description }}
+          </p>
+
+          <div *ngIf="update.images && update.images.length > 0" class="mt-6">
+            <div class="relative">
+              <div
+                *ngIf="update.images.length === 1"
+                class="aspect-video bg-gray-100 rounded-xl overflow-hidden"
+              >
+                <img
+                  [src]="update.images[0]"
+                  [alt]="update.title"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+
+              <div *ngIf="update.images.length > 1" class="relative">
+                <div
+                  class="aspect-video bg-gray-100 rounded-xl overflow-hidden"
+                >
+                  <img
+                    [src]="getCurrentUpdateImage(update, i)"
+                    [alt]="update.title"
+                    class="w-full h-full object-cover transition-all duration-500"
+                  />
+                </div>
+
+                <div
+                  class="absolute inset-0 flex items-center justify-between p-4 opacity-0 hover:opacity-100 transition-opacity duration-300"
+                >
+                  <button
+                    (click)="previousUpdateImage(i)"
+                    class="p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors backdrop-blur-sm"
+                  >
+                    <lucide-icon
+                      [img]="chevronLeftIcon"
+                      class="h-4 w-4"
+                    ></lucide-icon>
+                  </button>
+                  <button
+                    (click)="nextUpdateImage(i)"
+                    class="p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors backdrop-blur-sm"
+                  >
+                    <lucide-icon
+                      [img]="chevronRightIcon"
+                      class="h-4 w-4"
+                    ></lucide-icon>
+                  </button>
+                </div>
+
+                <div
+                  class="absolute bottom-4 left-4 px-3 py-1 bg-black/50 text-white rounded-full text-xs font-medium backdrop-blur-sm"
+                >
+                  {{ (currentUpdateImageIndex["update-" + i] || 0) + 1 }} /
+                  {{ update.images.length }}
+                </div>
+              </div>
+
+              <div
+                *ngIf="update.images.length > 1"
+                class="flex gap-2 mt-4 overflow-x-auto pb-2"
+              >
+                <button
+                  *ngFor="let image of update.images; let j = index"
+                  (click)="setCurrentUpdateImage(i, j)"
+                  class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300"
+                  [class.border-indigo-500]="
+                    (currentUpdateImageIndex['update-' + i] || 0) === j
+                  "
+                  [class.border-gray-200]="
+                    (currentUpdateImageIndex['update-' + i] || 0) !== j
+                  "
+                >
+                  <img
+                    [src]="image"
+                    [alt]="update.title"
+                    class="w-full h-full object-cover"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="showModal"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        (click)="closeModal()"
+      ></div>
+      <div
+        class="relative bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-white/20"
+      >
+        <div class="p-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">
+            {{ editingUpdate ? "Edit Update" : "Create New Update" }}
+          </h2>
+          <form
+            [formGroup]="updateForm"
+            (ngSubmit)="saveUpdate()"
+            class="space-y-6"
+          >
+            <div class="space-y-3">
+              <label for="title" class="text-sm font-semibold text-gray-700"
+                >Title</label
+              >
+              <input
+                id="title"
+                formControlName="title"
+                placeholder="Enter update title"
+                class="input-focus w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-indigo-500 focus:outline-none font-medium"
+              />
+              <div
+                *ngIf="
+                  (updateForm.get('title')?.invalid &&
+                    updateForm.get('title')?.touched) ||
+                  formErrors['title']
+                "
+                class="text-sm text-red-600"
+              >
+                {{ formErrors["title"] || "Title is required" }}
+              </div>
+            </div>
+            <div class="space-y-3">
+              <label
+                for="description"
+                class="text-sm font-semibold text-gray-700"
+                >Description</label
+              >
+              <textarea
+                id="description"
+                formControlName="description"
+                rows="6"
+                placeholder="Write your update content here..."
+                class="input-focus w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-indigo-500 focus:outline-none font-medium resize-none"
+              ></textarea>
+              <div
+                *ngIf="
+                  (updateForm.get('description')?.invalid &&
+                    updateForm.get('description')?.touched) ||
+                  formErrors['description']
+                "
+                class="text-sm text-red-600"
+              >
+                {{ formErrors["description"] || "Description is required" }}
+              </div>
+            </div>
+            <div class="space-y-3">
+              <label for="date" class="text-sm font-semibold text-gray-700"
+                >Date</label
+              >
+              <input
+                id="date"
+                type="date"
+                formControlName="postDate"
+                class="input-focus w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-indigo-500 focus:outline-none font-medium"
+              />
+              <div
+                *ngIf="
+                  (updateForm.get('postDate')?.invalid &&
+                    updateForm.get('postDate')?.touched) ||
+                  formErrors['postDate']
+                "
+                class="text-sm text-red-600"
+              >
+                {{ formErrors["postDate"] || "Date is required" }}
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-semibold text-gray-700"
+                  >Update Images</label
+                >
+                <div class="flex gap-2">
+                  <input
+                    type="file"
+                    #fileInput
+                    multiple
+                    accept="image/*"
+                    (change)="onFileSelected($event)"
+                    class="hidden"
+                  />
+                  <button
+                    type="button"
+                    (click)="fileInput.click()"
+                    class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 text-sm font-medium"
+                  >
+                    <lucide-icon
+                      [img]="cameraIcon"
+                      class="h-4 w-4"
+                    ></lucide-icon>
+                    Upload Images
+                  </button>
+                </div>
+              </div>
+
+              <div
+                class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-indigo-400 transition-colors"
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)"
+                (drop)="onDrop($event)"
+                [class.border-indigo-400]="isDragOver"
+                [class.bg-indigo-50]="isDragOver"
+              >
+                <lucide-icon
+                  [img]="uploadIcon"
+                  class="h-12 w-12 text-gray-400 mx-auto mb-4"
+                ></lucide-icon>
+                <p class="text-gray-600 mb-2">
+                  Drag and drop images here, or click to select
+                </p>
+                <p class="text-sm text-gray-400">
+                  Supports: JPG, PNG, GIF, WebP
+                </p>
+              </div>
+
+              Image Preview Grid
+              <div *ngIf="selectedImages.length > 0" class="mt-6">
+                <h4 class="text-sm font-semibold text-gray-700 mb-3">
+                  Selected Images ({{ selectedImages.length }})
+                </h4>
+                <div
+                  class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                >
+                  <div
+                    *ngFor="let image of selectedImages; let i = index"
+                    class="relative group"
+                  >
+                    <div
+                      class="aspect-video bg-gray-100 rounded-lg overflow-hidden"
+                    >
+                      <img
+                        [src]="image.url"
+                        [alt]="image.name"
+                        class="w-full h-full object-cover"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      (click)="removeImage(i)"
+                      class="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                    >
+                      <lucide-icon [img]="xIcon" class="h-3 w-3"></lucide-icon>
+                    </button>
+                    <div class="absolute bottom-2 left-2 right-2">
+                      <div
+                        class="bg-black/50 text-white text-xs px-2 py-1 rounded truncate"
+                      >
+                        {{ image.name }}
+                      </div>
+                    </div>
+                    <div
+                      class="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded"
+                    >
+                      {{ i + 1 }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- General Error Message -->
+            <div
+              *ngIf="formErrors['general']"
+              class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg"
+            >
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                <span class="text-sm text-red-700 font-medium">{{
+                  formErrors["general"]
+                }}</span>
+              </div>
+            </div>
+
+            <div class="flex justify-end space-x-4 pt-6">
+              <button
+                type="button"
+                (click)="closeModal()"
+                [disabled]="isSubmitting"
+                class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-medium transition-all duration-300 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                [disabled]="isSubmitting"
+                class="btn-gradient px-6 py-3 rounded-xl text-white font-medium flex items-center gap-2 disabled:opacity-50"
+              >
+                <div
+                  *ngIf="isSubmitting"
+                  class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"
+                ></div>
+                {{ isSubmitting ? "Saving..." : "Save Update" }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

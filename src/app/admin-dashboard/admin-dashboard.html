@@ -1,0 +1,56 @@
+<app-loading [isLoading]="isLoading"></app-loading>
+<div
+  *ngIf="!isLoading"
+  class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50"
+>
+  <app-header></app-header>
+  <app-tabs
+    (activeTabChange)="onActiveTabChange($event)"
+    [activeTab]="activeTab"
+  ></app-tabs>
+
+  <app-overview
+    [routerLink]="['/overview']"
+    *ngIf="activeTab === 'overview' && data"
+    [dataLengths]="{
+      projectsLength: data?.projects?.length,
+      updatesLength: data?.updates?.length,
+      experienceLength: data?.experiences?.length
+    }"
+    [activeTab]="activeTab"
+    (activeTabChange)="onActiveTabChange($event)"
+  ></app-overview>
+
+  <app-personal-info
+    *ngIf="activeTab === 'personal'"
+    [routerLink]="['/personal']"
+    [personalInfo]="data?.personal"
+  ></app-personal-info>
+
+  <app-projects-manager
+    *ngIf="activeTab === 'projects'"
+    [routerLink]="['/projects']"
+    [projects]="data?.projects || []"
+    (projectsUpdated)="loadData()"
+  ></app-projects-manager>
+
+  <app-experience-manager
+    *ngIf="activeTab === 'experience'"
+    [experiences]="data?.experiences"
+    [routerLink]="['/experience']"
+    (experiencesUpdated)="loadData()"
+  ></app-experience-manager>
+
+  <app-contact-info
+    [contactInfo]="data?.contact"
+    *ngIf="activeTab === 'contact'"
+    [routerLink]="['/contact']"
+  ></app-contact-info>
+
+  <app-updates-manager
+    *ngIf="activeTab === 'updates'"
+    [routerLink]="['/updates']"
+    [updates]="data?.updates || []"
+    (updatesUpdated)="loadData()"
+  ></app-updates-manager>
+</div>
