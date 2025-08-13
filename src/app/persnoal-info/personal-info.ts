@@ -35,7 +35,7 @@ export class PersonalInfo {
     this._personalInfo = value;
     if (value) {
       this.personalForm.patchValue({
-        skills: value.skills ?? [],
+        skills: value.skills ? value.skills.join(', ') : '',
         title: value.title ?? '',
         bio: value.bio ?? '',
         name: value.name ?? '',
@@ -99,8 +99,13 @@ export class PersonalInfo {
         formValue[key] !== null &&
         formValue[key] !== undefined
       ) {
-        if (Array.isArray(formValue[key])) {
-          formData.append(key, JSON.stringify(formValue[key]));
+        if (key === 'skills') {
+          const skillsArray = formValue[key]
+            .split(',')
+            .map((s: string) => s.trim());
+          skillsArray.forEach((skill: string) => {
+            formData.append('skills', skill);
+          });
         } else {
           formData.append(key, formValue[key]);
         }

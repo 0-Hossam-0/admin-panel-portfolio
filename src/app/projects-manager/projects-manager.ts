@@ -125,7 +125,6 @@ export class ProjectsManager implements OnInit, OnDestroy {
     return this._projects;
   }
 
-  // Helper method to get the full image URL
 
   getCurrentImage(project: IData['projects'][number]): string {
     const index = this.currentImageIndex[project.id] || 0;
@@ -134,29 +133,21 @@ export class ProjectsManager implements OnInit, OnDestroy {
   }
 
   nextImage(projectId: string) {
-    console.log('Current index before:', this.currentImageIndex[projectId]);
     const project = this.projects?.find((p) => p.id === projectId);
-    console.log('Found project:', project);
-
     if (project && project.images.length > 1) {
+      const currentIndex = this.currentImageIndex[projectId] || 0;
       this.currentImageIndex[projectId] =
-        (this.currentImageIndex[projectId] + 1) % project.images.length;
-      console.log('Current index after:', this.currentImageIndex[projectId]);
+        (currentIndex + 1) % project.images.length;
     }
   }
 
   previousImage(projectId: string) {
     const project = this.projects?.find((p) => p.id === projectId);
-    if (!project || project.images.length <= 1) return;
-
-    // Initialize if undefined
-    if (this.currentImageIndex[projectId] === undefined) {
-      this.currentImageIndex[projectId] = 0;
+    if (project && project.images.length > 1) {
+      const currentIndex = this.currentImageIndex[projectId] || 0;
+      this.currentImageIndex[projectId] =
+        (currentIndex - 1 + project.images.length) % project.images.length;
     }
-
-    const currentIndex = this.currentImageIndex[projectId];
-    this.currentImageIndex[projectId] =
-      currentIndex === 0 ? project.images.length - 1 : currentIndex - 1;
   }
 
   addProject() {
