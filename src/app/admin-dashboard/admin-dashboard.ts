@@ -53,10 +53,8 @@ export class AdminDashboard implements OnInit {
       next: (result) => {
         this.data = result;
         this.isLoading = false;
-        console.log('result', result);
       },
       error: (error) => {
-        console.error('Failed to load data:', error);
         this.isLoading = false;
       },
     });

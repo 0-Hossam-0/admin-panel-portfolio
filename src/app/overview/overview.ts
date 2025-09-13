@@ -57,7 +57,6 @@ export class Overview {
       try {
         this.dataService.triggerProjectModal();
       } catch (error) {
-        console.error('Error triggering project modal:', error);
       }
     }, 200); // Increased timeout for better reliability
   }
@@ -70,7 +69,6 @@ export class Overview {
       try {
         this.dataService.triggerExperienceModal();
       } catch (error) {
-        console.error('Error triggering experience modal:', error);
       }
     }, 200); // Increased timeout for better reliability
   }
@@ -83,7 +81,6 @@ export class Overview {
       try {
         this.dataService.triggerUpdateModal();
       } catch (error) {
-        console.error('Error triggering update modal:', error);
       }
     }, 200); // Increased timeout for better reliability
   }

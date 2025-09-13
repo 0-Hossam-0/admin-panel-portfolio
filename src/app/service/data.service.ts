@@ -68,17 +68,14 @@ export class DataService {
 
   // Methods to trigger modals
   triggerProjectModal() {
-    console.log('DataService: Triggering project modal');
     this.openProjectModalSubject.next();
   }
 
   triggerExperienceModal() {
-    console.log('DataService: Triggering experience modal');
     this.openExperienceModalSubject.next();
   }
 
   triggerUpdateModal() {
-    console.log('DataService: Triggering update modal');
     this.openUpdateModalSubject.next();
   }
 
@@ -101,7 +98,6 @@ export class DataService {
       ),
     }).pipe(
       catchError((error) => {
-        console.log('Error Fetch', error);
         return of(null);
       })
     );
@@ -167,7 +163,6 @@ export class DataService {
         formData.append('images', img.file, img.name);
       }
     });
-    console.log('form data', formData);
     return this.http.put<IData['projects'][number]>(
       `${APP_URL}/project/${originalTitle}`,
       formData,

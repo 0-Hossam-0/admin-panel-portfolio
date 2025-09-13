@@ -67,7 +67,6 @@ export class ContactInfo {
         alert('Contact information saved successfully!');
       },
       error: (error) => {
-        console.error('Delete failed', error);
         alert('Failed to save contact info. Please try again.');
       },
     });

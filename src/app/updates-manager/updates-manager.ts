@@ -79,7 +79,6 @@ export class UpdatesManager implements OnInit, OnDestroy {
 
   @Input({ required: true })
   set updates(value: IData['updates'] | undefined) {
-    console.log('Updates received:', value);
     this._updates = value || [];
     if (this._updates.length > 0) {
       this._updates.forEach((update, index) => {
@@ -109,9 +108,6 @@ export class UpdatesManager implements OnInit, OnDestroy {
   ngOnInit() {
     // Subscribe to modal trigger from overview
     this.modalSubscription = this.dataService.openUpdateModal$.subscribe(() => {
-      console.log(
-        'UpdatesManager: Received modal trigger, opening add update modal'
-      );
       this.addUpdate();
     });
   }
@@ -299,12 +295,10 @@ export class UpdatesManager implements OnInit, OnDestroy {
         .modifyUpdate(this.editingUpdate.title, updateData, this.selectedImages)
         .subscribe({
           next: () => {
-            console.log('Update modified successfully');
             this.closeModal();
             this.updatesUpdated.emit();
           },
           error: (error) => {
-            console.error('Failed to modify update:', error);
             this.handleBackendErrors(error);
             this.isSubmitting = false;
           },
@@ -321,7 +315,6 @@ export class UpdatesManager implements OnInit, OnDestroy {
           this.updatesUpdated.emit();
         },
         error: (error) => {
-          console.error('Failed to save update:', error);
           this.handleBackendErrors(error);
           this.isSubmitting = false;
         },
@@ -335,11 +328,9 @@ export class UpdatesManager implements OnInit, OnDestroy {
     if (confirm(`Are you sure you want to delete "${update.title}"?`)) {
       this.dataService.deleteUpdate(update.title).subscribe({
         next: () => {
-          console.log('Update deleted successfully');
           this.updatesUpdated.emit();
         },
         error: (error) => {
-          console.error('Failed to delete update:', error);
           this.formErrors['general'] =
             'Failed to delete update. Please try again.';
         },

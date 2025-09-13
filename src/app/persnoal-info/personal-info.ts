@@ -45,7 +45,6 @@ export class PersonalInfo {
 
       this.imagePreview = value.image || null;
       this.imagePreviewTemp = value.image || null;
-      console.log('image preview1', this.imagePreview);
     }
   }
 
@@ -118,9 +117,7 @@ export class PersonalInfo {
       formData.append('image', formValue.image);
     }
 
-    console.log('FormData entries:');
     for (const pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
     }
 
     this.data.savePersonalInfo(formData).subscribe({
@@ -133,7 +130,6 @@ export class PersonalInfo {
         alert('Personal information saved successfully!');
       },
       error: (error) => {
-        console.error('Save failed', error);
         this.isLoading = false;
         alert(`Failed to save: ${error.message}`);
       },

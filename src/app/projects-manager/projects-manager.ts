@@ -91,9 +91,6 @@ export class ProjectsManager implements OnInit, OnDestroy {
   ngOnInit() {
     // Subscribe to modal trigger from overview
     this.modalSubscription = this.data.openProjectModal$.subscribe(() => {
-      console.log(
-        'ProjectsManager: Received modal trigger, opening add project modal'
-      );
       this.addProject();
     });
   }
@@ -161,7 +158,6 @@ export class ProjectsManager implements OnInit, OnDestroy {
   editProject(project: IData['projects'][number]) {
     this.editingProject = project;
     this.formErrors = {};
-    console.log(project.images);
 
     // Convert string URLs to ProjectImage objects for editing
     this.selectedImages = project.images.map((imagePath, index) => ({
@@ -281,12 +277,6 @@ export class ProjectsManager implements OnInit, OnDestroy {
         : [],
     };
     if (this.editingProject) {
-      console.log(
-        'values',
-        this.editingProject.title,
-        projectData,
-        this.selectedImages
-      );
       // Update existing project
       this.data
         .updateProject(
@@ -296,12 +286,10 @@ export class ProjectsManager implements OnInit, OnDestroy {
         ) // Pass selectedImages
         .subscribe({
           next: (updatedProject) => {
-            console.log('Project updated successfully:', updatedProject);
             this.closeModal();
             this.projectsUpdated.emit();
           },
           error: (err) => {
-            console.error('Failed to update project', err);
             this.handleBackendErrors(err);
             this.isSubmitting = false;
           },
@@ -319,7 +307,6 @@ export class ProjectsManager implements OnInit, OnDestroy {
           this.projectsUpdated.emit();
         },
         error: (err) => {
-          console.error('Failed to add project', err);
           this.handleBackendErrors(err);
           this.isSubmitting = false;
         },
@@ -341,7 +328,6 @@ export class ProjectsManager implements OnInit, OnDestroy {
         });
       },
       error: (error) => {
-        console.error('Delete failed', error);
         alert('Failed to delete project. Please try again.');
       },
     });

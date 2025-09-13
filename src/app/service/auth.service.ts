@@ -24,7 +24,6 @@ export class AuthService {
       .pipe(
         map(() => true),
         catchError((err) => {
-          console.log('Logout failed, status:', err.status);
           return of(false);
         })
       );
@@ -38,7 +37,6 @@ export class AuthService {
       .pipe(
         map(() => true),
         catchError((err) => {
-          console.log('Auth check failed, status:', err.status);
           return of(false);
         })
       );

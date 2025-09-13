@@ -73,7 +73,6 @@ export class ExperienceManager implements OnInit, OnDestroy {
 
   @Input({ required: true })
   set experiences(experiences: IData['experiences'] | undefined) {
-    console.log('experiences:', experiences);
     this._experiences = experiences;
     if (experiences) {
       this.experienceForm.patchValue([experiences]);
@@ -98,9 +97,6 @@ export class ExperienceManager implements OnInit, OnDestroy {
   ngOnInit() {
     // Subscribe to modal trigger from overview
     this.modalSubscription = this.data.openExperienceModal$.subscribe(() => {
-      console.log(
-        'ExperienceManager: Received modal trigger, opening add experience modal'
-      );
       this.addExperience();
     });
   }
@@ -205,8 +201,6 @@ export class ExperienceManager implements OnInit, OnDestroy {
       return;
     }
 
-    console.log(formValue.startDate);
-    console.log(formValue.provider);
 
     // Handle completion date - if ongoing, set to null, otherwise use the selected date
     let completionDate: Date | null = null;
@@ -240,7 +234,6 @@ export class ExperienceManager implements OnInit, OnDestroy {
             this.closeModal();
           },
           error: (error) => {
-            console.error('Failed to update experience:', error);
             this.handleBackendErrors(error);
             this.isSubmitting = false;
           },
@@ -252,7 +245,6 @@ export class ExperienceManager implements OnInit, OnDestroy {
           this.closeModal();
         },
         error: (error) => {
-          console.error('Failed to add experience:', error);
           this.handleBackendErrors(error);
           this.isSubmitting = false;
         },
@@ -271,7 +263,6 @@ export class ExperienceManager implements OnInit, OnDestroy {
         });
       },
       error: (error) => {
-        console.error('Delete failed', error);
         this.formErrors['general'] =
           'Failed to delete experience. Please try again.';
       },
