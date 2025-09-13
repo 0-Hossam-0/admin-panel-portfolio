@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
+import { APP_URL } from '../environment/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   constructor(private http: HttpClient) {}
   login(username: string, password: string): Observable<Object> {
     return this.http.post(
-      'http://localhost:3000/api/user/login',
+      `${APP_URL}/user/login`,
       {
         username,
         password,
@@ -17,7 +18,7 @@ export class AuthService {
   }
   logout(): Observable<boolean> {
     return this.http
-      .get('http://localhost:3000/api/user/logout', {
+      .get(`${APP_URL}/user/logout`, {
         withCredentials: true,
       })
       .pipe(
@@ -30,7 +31,7 @@ export class AuthService {
   }
   isAuthenticated(): Observable<boolean> {
     return this.http
-      .get('http://localhost:3000/api/user/auth', {
+      .get(`${APP_URL}/user/auth`, {
         observe: 'response',
         withCredentials: true,
       })

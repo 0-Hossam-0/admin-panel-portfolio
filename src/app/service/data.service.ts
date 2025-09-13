@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, forkJoin, Observable, of, Subject } from 'rxjs';
 import { ProjectImage } from '../projects-manager/projects-manager';
+import { APP_URL } from '../environment/environment';
 
 interface UpdateImage {
   id: string;
@@ -84,19 +85,19 @@ export class DataService {
   getAllData(): Observable<IData | null> {
     return forkJoin({
       projects: this.http.get<IData['projects']>(
-        'http://localhost:3000/api/project'
+        `${APP_URL}/project`
       ),
-      experiences: this.http.get<IData['experiences']>(
-        'http://localhost:3000/api/experience'
+      experiences: this.http.get<IData[`experiences`]>(
+        `${APP_URL}/experience`
       ),
-      contact: this.http.get<IData['contact']>(
-        'http://localhost:3000/api/contact'
+      contact: this.http.get<IData[`contact`]>(
+        `${APP_URL}/contact`
       ),
-      updates: this.http.get<IData['updates']>(
-        'http://localhost:3000/api/update'
+      updates: this.http.get<IData[`updates`]>(
+        `${APP_URL}/update`
       ),
-      personal: this.http.get<IData['personal']>(
-        'http://localhost:3000/api/personal'
+      personal: this.http.get<IData[`personal`]>(
+        `${APP_URL}/personal`
       ),
     }).pipe(
       catchError((error) => {
@@ -107,7 +108,7 @@ export class DataService {
   }
 
   deleteProject(title: string): Observable<any> {
-    return this.http.delete(`http://localhost:3000/api/project/${title}`, {
+    return this.http.delete(`${APP_URL}/project/${title}`, {
       withCredentials: true,
     });
   }
@@ -137,7 +138,7 @@ export class DataService {
     });
 
     return this.http.post<IData['projects'][number]>(
-      `http://localhost:3000/api/project`,
+      `${APP_URL}/project`,
       formData,
       {
         withCredentials: true,
@@ -168,7 +169,7 @@ export class DataService {
     });
     console.log('form data', formData);
     return this.http.put<IData['projects'][number]>(
-      `http://localhost:3000/api/project/${originalTitle}`,
+      `${APP_URL}/project/${originalTitle}`,
       formData,
       {
         withCredentials: true,
@@ -180,7 +181,7 @@ export class DataService {
     experience: Partial<IData['experiences'][number]>
   ): Observable<IData['experiences'][number]> {
     return this.http.post<IData['experiences'][number]>(
-      `http://localhost:3000/api/experience`,
+      `${APP_URL}/experience`,
       experience,
       {
         withCredentials: true,
@@ -190,7 +191,7 @@ export class DataService {
 
   deleteExperience(experienceId: string): Observable<any> {
     return this.http.delete(
-      `http://localhost:3000/api/experience/${experienceId}`,
+      `${APP_URL}/experience/${experienceId}`,
       {
         withCredentials: true,
       }
@@ -202,7 +203,7 @@ export class DataService {
     experience: Partial<IData['experiences'][number]>
   ): Observable<IData['experiences'][number]> {
     return this.http.put<IData['experiences'][number]>(
-      `http://localhost:3000/api/experience/${experienceId}`,
+      `${APP_URL}/experience/${experienceId}`,
       experience,
       {
         withCredentials: true,
@@ -212,7 +213,7 @@ export class DataService {
 
   saveContactInfo(contactInfo: IData['contact']): Observable<IData['contact']> {
     return this.http.put<IData['contact']>(
-      `http://localhost:3000/api/contact/`,
+      `${APP_URL}/contact/`,
       contactInfo,
       {
         withCredentials: true,
@@ -221,7 +222,7 @@ export class DataService {
   }
 
   savePersonalInfo(personalInfo: FormData | IData['personal']) {
-    return this.http.put(`http://localhost:3000/api/personal/`, personalInfo, {
+    return this.http.put(`${APP_URL}/personal/`, personalInfo, {
       withCredentials: true,
     });
   }
@@ -246,7 +247,7 @@ export class DataService {
     formData.append('existingImageUrls', JSON.stringify(existingImageUrls));
 
     return this.http.post<IData['updates'][number]>(
-      `http://localhost:3000/api/update/`,
+      `${APP_URL}/update/`,
       formData,
       {
         withCredentials: true,
@@ -281,7 +282,7 @@ export class DataService {
     });
 
     return this.http.put<IData['updates'][number]>(
-      `http://localhost:3000/api/update/${updateTitle}`,
+      `${APP_URL}/update/${updateTitle}`,
       formData,
       {
         withCredentials: true,
@@ -290,7 +291,7 @@ export class DataService {
   }
 
   deleteUpdate(updateTitle: string): Observable<any> {
-    return this.http.delete(`http://localhost:3000/api/update/${updateTitle}`, {
+    return this.http.delete(`${APP_URL}/update/${updateTitle}`, {
       withCredentials: true,
     });
   }
