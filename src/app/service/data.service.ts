@@ -54,19 +54,16 @@ export interface IData {
   providedIn: 'root',
 })
 export class DataService {
-  // Modal trigger subjects
   private openProjectModalSubject = new Subject<void>();
   private openExperienceModalSubject = new Subject<void>();
   private openUpdateModalSubject = new Subject<void>();
 
-  // Observable streams for modal triggers
   openProjectModal$ = this.openProjectModalSubject.asObservable();
   openExperienceModal$ = this.openExperienceModalSubject.asObservable();
   openUpdateModal$ = this.openUpdateModalSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  // Methods to trigger modals
   triggerProjectModal() {
     this.openProjectModalSubject.next();
   }
